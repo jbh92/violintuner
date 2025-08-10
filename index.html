@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Violin Tuner – Web</title>
+  <meta name="theme-color" content="#0f172a" />
+  <!-- iOS PWA helpers -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="favicon.svg" />
+  <style>
+    :root { --fg:#0f172a; --muted:#64748b; --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444; --card:#ffffff; --bg:#f8fafc; }
+    * { box-sizing: border-box; }
+    html,body { height:100%; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color:var(--fg); background:linear-gradient(180deg, #f8fafc, #eef2f7); }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 24px; }
+    .card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+    h1 { font-size: clamp(28px, 4vw, 40px); margin: 0 0 16px; }
+    .controls { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom: 16px; }
+    select, button, label.switch { height: 40px; border-radius: 12px; border:1px solid #e5e7eb; padding: 0 12px; background:#fff; font-size:16px; }
+    button { cursor:pointer; }
+    button.primary { background:#111827; color:#fff; border-color:#111827; }
+    .readout { display:grid; grid-template-columns: 1fr; justify-items:center; gap:8px; margin-top: 8px; }
+    .note { font-size: clamp(48px, 9vw, 96px); font-weight: 700; letter-spacing: 1px; }
+    .freq { font-size: 18px; color: var(--muted); }
+    .cents { font-size: 18px; }
+    .subtle { color: var(--muted); }
+    .needleBox { position: relative; height: 140px; margin: 10px 0 0; }
+    .scale { position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-end; }
+    .tick { width:2px; background: rgba(15,23,42,0.25); margin:0 10px; }
+    .tick.major { height:36px; }
+    .tick.minor { height:24px; opacity:0.6; }
+    .tick.zero  { background: rgba(16,185,129,0.9); }
+    .labels { position:absolute; bottom: 4px; left:0; right:0; display:flex; justify-content:space-between; padding: 0 26px; font-size:12px; color: var(--muted); }
+    .needle { position:absolute; left:50%; top:22px; width:3px; height:95px; background:#111827; transform-origin: 50% 85px; border-radius:3px; transition: transform 100ms linear; }
+    .centerLine { position:absolute; left:50%; top:30px; width:2px; height:80px; background: rgba(16,185,129,0.5); transform: translateX(-50%); border-radius:2px; }
+    .footer { text-align:center; margin-top:18px; font-size:13px; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Violin Tuner</h1>
+
+      <div class="controls">
+        <select id="target">
+          <option value="auto" selected>Auto (G/D/A/E)</option>
+          <option value="G3">G3 – 196.00 Hz</option>
+          <option value="D4">D4 – 293.66 Hz</option>
+          <option value="A4">A4 – 440.00 Hz</option>
+          <option value="E5">E5 – 659.25 Hz</option>
+        </select>
+        <div class="pill" id="activeTarget">Target: Auto</div>
+        <div class="pill subtle" id="status">Idle</div>
+        <button id="toggle" class="primary">Start</button>
+      </div>
+
+      <div class="needleBox">
+        <div class="centerLine"></div>
+        <div id="needle" class="needle"></div>
+        <div class="scale" id="scale"></div>
+        <div class="labels"><span>-50¢</span><span>0</span><span>+50¢</span></div>
+      </div>
+
+      <div class="readout">
+        <div class="note" id="note">—</div>
+        <div class="freq" id="freq">— Hz</div>
+        <div class="cents" id="cents">—</div>
+      </div>
+
+      <div class="footer">Tip: Safari/iOS requires HTTPS (or localhost) and a user gesture to allow microphone access.</div>
+    </div>
+  </div>
+
+<script type="module" src="tuner.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>

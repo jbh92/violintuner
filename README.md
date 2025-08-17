@@ -1,26 +1,64 @@
-# Violin Tuner (PWA)
+# Violin Tuner – PWA
 
-Minimal folder for GitHub Pages / Netlify / Vercel.
+A lightweight, offline-capable **progressive web app** for tuning a violin. Uses the Web Audio API to detect pitch in real time and auto-detects the nearest violin string (G3, D4, A4, E5).
 
-## Files
-- `index.html` – UI + layout
-- `tuner.js` – Web Audio + pitch detection (autocorrelation)
-- `manifest.json` – PWA manifest
-- `sw.js` – Service worker (offline cache)
-- `favicon.svg` – Favicon and base artwork for icons
-- `icon-192.png`, `icon-512.png` – PWA icons (export from the SVG)
+## Features
+- **Auto string detection** – automatically selects the closest violin string.
+- **Visual tuning needle** – ±50 cents range, color-coded accuracy.
+- **Offline support** – works without internet after first load.
+- **iOS/Android installable** – add to home screen for an app-like experience.
+- **No tracking** – all audio is processed locally in your browser.
 
-## Deploy to GitHub Pages
-1. Create a public repo and add these files in the repo root (no subfolder).
-2. Commit & push.
-3. In the repo: **Settings → Pages → Build and deployment → Source: Deploy from a branch**. Choose `main` branch, `/ (root)` folder. Save.
-4. Wait for the URL to appear at the top of the Pages section. Open it over HTTPS.
-5. First visit caches the app. On iPhone Safari: Share → **Add to Home Screen**.
+## How to Use
+1. Open the app in a modern browser over **HTTPS**.
+2. Tap **Start** and allow microphone access.
+3. Play an open string on your violin.
+4. Center the needle to tune – left = flat, right = sharp.
 
-## Updates
-- Bump the `CACHE` name in `sw.js` (e.g., `violin-tuner-v2`) to force clients to grab new assets.
+## Installation (PWA)
+### iOS (Safari)
+1. Open the app URL in Safari.
+2. Tap the **Share** icon → **Add to Home Screen**.
+3. Launch from the home screen icon.
 
-## Troubleshooting
-- **No mic prompt**: Make sure you’re on HTTPS (or `http://localhost`).
-- **No audio** in iOS: Tap **Start** (user gesture is required) and confirm mic permission.
-- **Icons look blurry**: Re-export higher quality PNGs from `favicon.svg`.
+### Android (Chrome/Edge)
+1. Open the app URL.
+2. Tap the **Install** or **Add to Home Screen** prompt.
+
+Once installed, the tuner works offline.
+
+## Development
+### Files
+- `index.html` – Main HTML layout and style.
+- `tuner.js` – Pitch detection logic and UI updates.
+- `manifest.json` – PWA metadata.
+- `sw.js` – Service worker for offline caching.
+- `favicon.svg` – Base artwork for icons.
+- `icon-192.png`, `icon-512.png` – Generated from `favicon.svg`.
+
+### Local Testing
+Serve over HTTPS or use `http://localhost` to test microphone access:
+```bash
+python3 -m http.server 8080
+```
+Then visit `http://localhost:8080` in your browser.
+
+### Deployment
+For **GitHub Pages**:
+1. Create a public repo.
+2. Place all files in the repo root.
+3. Push to the `main` branch.
+4. Enable Pages in repo settings → **Pages** → source: `main` branch, `/ (root)`.
+5. Open the provided HTTPS link.
+
+For **Netlify/Vercel**:
+- Drag-and-drop the folder onto Netlify, or link your repo.
+- Ensure HTTPS is enabled for microphone access.
+
+## Security Notes
+- All processing is done locally; no audio leaves your device.
+- The service worker caches assets for offline use; bump the `CACHE` name in `sw.js` to force updates.
+- To harden further, restrict service worker caching to same-origin assets only.
+
+## License
+MIT License – free to use, modify, and share.
